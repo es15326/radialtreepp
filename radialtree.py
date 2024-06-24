@@ -48,9 +48,10 @@ def radialTreee(
 
     ax : Axes or None:
         Axes in which to draw the plot, otherwise use the currently-active Axes.
-    pallete : string
+    pallete : string or None
 
         Matlab colormap name.
+        If `None` is provided then `color_list` from Z2 is used as is.
     sample_classes : dict
         A dictionary that contains lists of sample subtypes or classes. These classes appear
         as color labels of each leaf. Colormaps are automatically assigned. Not compatible
