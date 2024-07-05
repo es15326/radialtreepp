@@ -48,9 +48,10 @@ def radialTreee(
 
     ax : Axes or None:
         Axes in which to draw the plot, otherwise use the currently-active Axes.
-    pallete : string
+    pallete : string or None
 
         Matlab colormap name.
+        If `None` is provided then `color_list` from Z2 is used as is.
     sample_classes : dict
         A dictionary that contains lists of sample subtypes or classes. These classes appear
         as color labels of each leaf. Colormaps are automatically assigned. Not compatible
@@ -113,17 +114,26 @@ def radialTreee(
     # )
     ucolors = sorted(set(Z2["color_list"]))
     # cmap = cm.gist_rainbow(np.linspace(0, 1, len(ucolors)))
-    cmp = cm.get_cmap(pallete, len(ucolors))
-    # print(cmp)
-    if type(cmp) == matplotlib.colors.LinearSegmentedColormap:
-        cmap = cmp(np.linspace(0, 1, len(ucolors)))
+    if pallete:
+        cmp = cm.get_cmap(pallete, len(ucolors))
+        # print(cmp)
+        if type(cmp) == matplotlib.colors.LinearSegmentedColormap:
+            cmap = cmp(np.linspace(0, 1, len(ucolors)))
+        else:
+            cmap = cmp.colors
+
+        def get_color(c):
+            return cmap[ucolors.index(c)]
+
     else:
-        cmap = cmp.colors
+
+        def get_color(c):
+            return c
 
     nlabels = 0
     for icoord, dcoord, c in sorted(zip(Z2["icoord"], Z2["dcoord"], Z2["color_list"])):
         # x, y = Z2['icoord'][0], Z2['dcoord'][0]
-        _color = cmap[ucolors.index(c)]
+        _color = get_color(c)
         if c == "C0":  # np.abs(_xr1)<0.000000001 and np.abs(_yr1) <0.000000001:
             _color = "black"
 
