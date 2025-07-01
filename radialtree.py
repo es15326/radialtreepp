@@ -197,16 +197,114 @@ def radialTreee(
             f'Internal error, label numbers for Z2 ({len(Z2["ivl"])})'
             f" and for calculated labels ({len(label_coords)}) must be equal!"
         )
-        for (_x, _y, _rot), label in zip(label_coords, Z2["ivl"]):
-            ax.text(
-                _x,
-                _y,
-                label,
-                {"va": "center"},
-                rotation_mode="anchor",
-                rotation=_rot,
+        '''
+for (_x, _y, _rot), label in zip(label_coords, Z2["ivl"]):
+    ax.text(
+        _x,
+        _y,
+        label,
+        va="center",
+        ha="left" if _x >= 0 else "right",
+        rotation=0,
                 fontsize=fontsize,
-            )
+            )'''
+        label_offset = 0.1  # or 0.1
+        _x *= (1 + label_offset)
+        _y *= (1 + label_offset)
+
+        '''
+for (_x, _y, _rot), label in zip(label_coords, Z2["ivl"]):
+    ax.text(
+        _x,
+        _y,
+        label,
+        va="center",
+        ha="left" if _x >= 0 else "right",
+        rotation=0,  # Force horizontal label
+              fontsize=fontsize,
+              )'''
+        '''for (_x, _y, _rot), label in zip(label_coords, Z2["ivl"]):
+            angle_rad = np.arctan2(_y, _x)
+            y_adjust = 0.02 * np.sign(np.sin(angle_rad))  # shift up if top, down if bottom
+            ax.text(
+              _x,
+              _y + y_adjust,
+              label,
+              va="center",
+              ha="left" if _x >= 0 else "right",
+              rotation=0,
+              fontsize=fontsize,)'''
+        '''for (_x, _y, _rot), label in zip(label_coords, Z2["ivl"]):
+            angle_rad = np.arctan2(_y, _x)
+            y_adjust = 0.02 * np.sign(np.sin(angle_rad))  # shift up if top, down if bottom
+            ax.text(
+              _x,
+              _y + y_adjust,
+              label,
+              va="center",
+              ha="left" if _x >= 0 else "right",
+              rotation=0,
+              fontsize=fontsize,)'''
+        '''for (_x, _y, _rot), label in zip(label_coords, Z2["ivl"]):
+            angle_rad = np.arctan2(_y, _x)
+            # Increased y_adjust to create more vertical separation
+            y_adjust = 0.05 * np.sign(np.sin(angle_rad))  # shift up if top, down if bottom
+            ax.text(
+              _x,
+              _y + y_adjust,
+              label,
+              va="center",
+              ha="left" if _x >= 0 else "right",
+              rotation=0,
+              fontsize=fontsize,)'''
+        '''for (_x, _y, _rot), label in zip(label_coords, Z2["ivl"]):
+            angle_rad = np.arctan2(_y, _x)
+
+            # Initial base adjustment
+            y_adjust = 0.05 * np.sign(np.sin(angle_rad))
+
+            # Apply an additional, larger adjustment for labels very close to the top/bottom
+            # Check if the angle is close to 0 (right/top) or pi (left/bottom)
+            # np.isclose is used for floating point comparison
+            if np.isclose(angle_rad, 0, atol=0.1) or np.isclose(angle_rad, np.pi, atol=0.1) or \
+               np.isclose(angle_rad, -np.pi, atol=0.1) or np.isclose(angle_rad, 2 * np.pi, atol=0.1):
+                y_adjust *= 2.5  # Double the adjustment for labels at the extremes
+
+            ax.text(
+              _x,
+              _y + y_adjust,
+              label,
+              va="center",
+              ha="left" if _x >= 0 else "right",
+              rotation=0,
+              fontsize=fontsize,)'''
+        for (_x, _y, _rot), label in zip(label_coords, Z2["ivl"]):
+            angle_rad = np.arctan2(_y, _x)
+
+            # Normalize angle_rad to be within [0, 2*pi) for easier comparison
+            angle_norm = (angle_rad + 2 * np.pi) % (2 * np.pi)
+
+            # Base adjustment for all labels near the top/bottom regions
+            # Still use sin to determine direction (up or down)
+            y_adjust = 0.05 * np.sign(np.sin(angle_rad))
+
+            # Apply an additional, larger adjustment for labels very close to the absolute top (pi/2)
+            # or absolute bottom (3*pi/2)
+            # Use a slightly larger tolerance for these critical points
+            if np.isclose(angle_norm, np.pi/2, atol=0.15) or \
+               np.isclose(angle_norm, 3*np.pi/2, atol=0.15):
+                y_adjust *= 2.0  # Double the adjustment for labels at the extremes
+
+            ax.text(
+              _x,
+              _y + y_adjust,
+              label,
+              va="center",
+              ha="left" if _x >= 0 else "right",
+              rotation=0,
+              fontsize=fontsize,)
+
+
 
     if colorlabels != None:
         assert len(Z2["ivl"]) == len(label_coords), (
