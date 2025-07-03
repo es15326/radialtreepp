@@ -4,9 +4,8 @@ import os
 setup(
     name="radiatreepp",
     version="0.1",
-    author="Your Name",
+    author="Elham Soltani Kazemi",
     description="Radial dendrogram visualization with feature annotations",
-    long_description=open("README.md").read() if os.path.exists("README.md") else "",
     long_description_content_type="text/markdown",
     packages=find_packages(),
     install_requires=[
