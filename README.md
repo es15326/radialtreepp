@@ -31,6 +31,57 @@ pip install -e .
 
 ---
 
+## 🧪 Minimal Working Example
+
+Want to quickly test how `radiatreepp` works? Here's a complete, minimal example using synthetic data. It demonstrates how to compute a dendrogram from feature importances and visualize it with category-colored outer rings and SHAP-style node labels.
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from radiatreepp import radialTreee, RadialTreeConfig
+from radiatreepp.utils import compute_radialtree_linkage
+
+# Generate synthetic data
+np.random.seed(42)
+features = [f"F{i}" for i in range(10)]
+importances = np.random.rand(10) * 10
+categories = ["A", "B"] * 5
+
+df = pd.DataFrame({
+    "Feature": features,
+    "XGBoost": importances,
+    "Category": categories
+})
+df["XGBoost_log"] = np.log1p(df["XGBoost"])
+df["Feature_with_importance"] = df.apply(
+    lambda row: f"{row['Feature']} ({row['XGBoost']:.2f})", axis=1
+)
+
+# Create color mapping
+unique_cats = df["Category"].unique()
+cat_colors = plt.get_cmap("tab10")(np.linspace(0, 1, len(unique_cats)))
+cat_map = {cat: cat_colors[i] for i, cat in enumerate(unique_cats)}
+color_array = np.array([cat_map[c] for c in df["Category"]])
+colors_dict = {"Category": color_array}
+
+# Generate dendrogram and plot
+Z = compute_radialtree_linkage(df, "XGBoost_log", "Feature_with_importance")
+fig, ax = plt.subplots(figsize=(8, 8))
+config = RadialTreeConfig(
+    colorlabels=colors_dict,
+    gradient_colors=["black", "blue"],
+    radial_labels=True,
+    node_display_mode='inner',
+    node_label_display_mode='top_3',
+)
+radialTreee(Z, ax=ax, config=config)
+ax.set_title("Test RadialTree", fontsize=16)
+plt.show()
+
+
+---
+
 ## 🧪 Demo Examples
 
 To generate the plots from the included synthetic dataset:
