@@ -77,7 +77,7 @@ config = RadialTreeConfig(
 )
 radialTreee(Z, ax=ax, config=config)
 ax.set_title("Test RadialTree", fontsize=16)
-plt.show()
+plt.show()```
 
 
 ---
