@@ -24,7 +24,7 @@ pip install radiatreepp
 Or clone locally and install in editable mode:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/radiatreepp.git
+git clone git@github.com:es15326/radialtreepp.git
 cd radiatreepp
 pip install -e .
 ```
